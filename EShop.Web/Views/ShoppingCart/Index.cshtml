@@ -1,0 +1,57 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<EShop.Domain.StripeSettings> Stripe
+@model EShop.Domain.DTO.ShoppingCartDto;
+
+
+@{
+    <div class="container">
+
+        <h1 class="m-2">My Shopping Cart</h1>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col" colspan="2">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Books)
+                {
+                    <tr>
+                        <td scope="col">@item.Book.BookName</td>
+                        <td scope="col">@item.Book.Author</td>
+                        <td scope="col">@item.Quantity</td>
+                        <td scope="col">$@item.Book.Price</td>
+                        <td><a asp-controller="ShoppingCart" asp-action="DeleteFromShoppingCart" asp-route-id="@item.BookId" class="btn btn-danger text-center">Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="font-weight-bold" colspan="3">Total Price:</td>
+                    <td colspan="2">
+                        @if (Model.TotalPrice != 0)
+                        {
+                            <form asp-controller="ShoppingCart" asp-action="PayOrder" method="post">
+                                <article>
+                                    <script src="https://checkout.stripe.com/checkout.js"
+                                            class="stripe-button"
+                                            data-key="@Stripe.Value.PublishableKey"
+                                            data-locale="auto"
+                                            data-description="EShop Application Payment"
+                                            data-amount="@(Model.TotalPrice * 100)"
+                                            data-label="Pay $@Model.TotalPrice">
+                                    </script>
+                                </article>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+}

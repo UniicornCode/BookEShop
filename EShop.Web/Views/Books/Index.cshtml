@@ -1,0 +1,52 @@
+﻿@model List<EShop.Domain.DomainModels.Book>
+
+@{
+    ViewData["Title"] = "Books";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Shop Books</h1>
+
+<div class="container">
+
+    <p class="m-3">
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+
+        if (i % 4 == 0)
+        {
+            @:<div class="row">
+            }
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title h-25">@item.BookName</h3>
+                    </div>
+                    <img class="card-img-top img-fluid" src="@item.BookImage" style="height: 50%; object-fit: fill" alt="Image for product!">
+
+                    <div class="card-body">
+                        <h4 class="card-text">@item.Author</h4>
+                        <p class="card-text text-truncate">@item.BookDescription</p>
+                        <h6>Price: $@item.Price</h6>
+                        <h5 class="card-text float-right">Rating: @item.Rating</h5>
+                    </div>
+
+                    <div class="card-footer">
+                        <a asp-controller="Books" asp-action="AddBookToCart" asp-route-id="@item.Id" class="btn btn-info">Add to Cart</a>
+                        <a asp-controller="Books" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+                        <a asp-controller="Books" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mt-1">Delete</a>
+                    </div>
+                </div>
+            </div>
+
+            if (i % 4 == 3)
+            {
+            @:</div>
+        }
+    }
+</div>
